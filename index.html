@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>My Contact</title>
+  </head>
+  <body>
+    <!-- login page -->
+    <div class="modal hidden">
+      <h2 class="modal__header">LOGIN TO EXPLORE MORE</h2>
+      <form class="modal__form">
+        <label>Email Address</label>
+        <input type="email" />
+        <label>Password</label>
+        <input type="password" />
+        <button class="btn">LOGIN</button>
+      </form>
+    </div>
+
+    <!-- app body -->
+    <div class="container-app">
+      <nav class="navigation">
+        <ul class="logo-sec">
+          <li><img src="img/logo-my-contacts.png" alt="contact-app-logo" /></li>
+          <li>MY CONTACTS</li>
+        </ul>
+        <ul>
+          <li class="log-out"><button class="btn">LOG OUT</button></li>
+        </ul>
+      </nav>
+
+      <!-- add contact and Edit window -->
+      <div class="contact-form hidden">
+        <div class="modal">
+          <button class="btn--close-modal">&times;</button>
+          <h2 class="modal__header">Add New Contact</h2>
+          <form class="modal__form">
+            <label>First Name</label>
+            <input type="text" />
+            <label>Last Name</label>
+            <input type="text" />
+            <label>Contact</label>
+            <input type="text" />
+            <label>Email Address</label>
+            <input type="email" />
+          </form>
+          <div class="btn-container">
+            <button class="btn">Cancel</button>
+            <button class="btn">Done</button>
+          </div>
+          <div class="overlay hidden"></div>
+        </div>
+      </div>
+      <!-- contact card -->
+      <div class="card-container">
+        <div class="title-container"></div>
+        <div class="content"></div>
+      </div>
+      <!-- add contact button -->
+      <div class="add-contact">
+        <span>+</span>
+      </div>
+    </div>
+  </body>
+</html>
