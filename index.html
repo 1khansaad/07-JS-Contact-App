@@ -5,24 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-
+    <script defer src="script.js"></script>
     <title>My Contact</title>
   </head>
   <body>
     <!-- login page -->
-    <div class="modal hidden">
+    <div class="modal">
       <h2 class="modal__header">LOGIN TO EXPLORE MORE</h2>
       <form class="modal__form">
-        <label>Email Address</label>
-        <input type="email" />
+        <label>Email</label>
+        <div class="msg msg-email">
+          <input class="email" type="email" />
+        </div>
         <label>Password</label>
-        <input type="password" />
-        <button class="btn">LOGIN</button>
+        <div class="msg msg-password">
+          <input class="password" type="password" />
+        </div>
+        <button class="btn btn--login">LOGIN</button>
       </form>
     </div>
 
     <!-- app body -->
-    <div class="container-app">
+    <div class="container-app hidden">
       <nav class="navigation">
         <ul class="logo-sec">
           <li><img src="img/logo-my-contacts.png" alt="contact-app-logo" /></li>
@@ -102,6 +106,15 @@
           </ul>
         </div>
       </div>
+      <div class="modal modal-logout hidden">
+        <button class="btn--close-modal">&times;</button>
+        <h2 class="modal__header">Are you sure?</h2>
+        <div class="btn-container">
+          <button class="btn btn-no">NO</button>
+          <button class="btn btn-yes">YES</button>
+        </div>
+      </div>
+      <div class="overlay hidden"></div>
       <!-- add contact button -->
       <div class="add-contact">
         <span>+</span>
