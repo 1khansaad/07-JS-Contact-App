@@ -11,7 +11,7 @@ const appBody = document.querySelector(".container-app");
 const btnLogout = document.querySelector(".log-out");
 const modalLogout = document.querySelector(".modal-logout");
 const overlay = document.querySelector(".overlay");
-const btnNo = document.querySelector(".btn-no");
+const btnNo = document.querySelectorAll(".btn-no");
 const btnYes = document.querySelector(".btn-yes");
 const btnCloseLogoutModal = document.querySelectorAll(".btn--close-modal");
 const contactForm = document.querySelector(".contact-form");
@@ -23,9 +23,10 @@ const inputLastName = document.getElementById("last-name");
 const inputContact = document.getElementById("contact");
 const inputEmaill = document.getElementById("email");
 const titleContainer = document.querySelector(".title-container");
-const contactData = [];
+const modalDelete = document.querySelector(".modal-delete");
+const btnDeleteYes = document.querySelector(".btn-delete-yes");
 
-console.log(modalLogout);
+let contactData = [];
 
 // implementing login
 inputEmail.addEventListener("focus", function () {
@@ -69,20 +70,24 @@ btnLogout.addEventListener("click", () => {
   overlay.classList.remove("hidden");
 });
 
-btnNo.addEventListener("click", () => {
-  modalLogout.classList.add("hidden");
-  overlay.classList.add("hidden");
+btnNo.forEach((x) => {
+  x.addEventListener("click", () => {
+    modalLogout.classList.add("hidden");
+    overlay.classList.add("hidden");
+    modalDelete.classList.add("hidden");
+  });
 });
-btnCloseLogoutModal[0].addEventListener("click", () => {
-  modalLogout.classList.add("hidden");
-  overlay.classList.add("hidden");
-  contactForm.classList.add("hidden");
-});
+// btnCloseLogoutModal[0].addEventListener("click", () => {
+//   modalLogout.classList.add("hidden");
+//   overlay.classList.add("hidden");
+//   contactForm.classList.add("hidden");
+// });
 btnCloseLogoutModal.forEach((element) =>
   element.addEventListener("click", () => {
     modalLogout.classList.add("hidden");
     overlay.classList.add("hidden");
     contactForm.classList.add("hidden");
+    modalDelete.classList.add("hidden");
   })
 );
 btnCancel.addEventListener("click", () => {
@@ -93,6 +98,7 @@ overlay.addEventListener("click", () => {
   modalLogout.classList.add("hidden");
   overlay.classList.add("hidden");
   contactForm.classList.add("hidden");
+  modalDelete.classList.add("hidden");
 });
 btnYes.addEventListener("click", () => {
   modalLogin.classList.remove("hidden");
@@ -104,39 +110,69 @@ btnAddContact.addEventListener("click", () => {
   overlay.classList.remove("hidden");
 });
 const render = () => {
-  const html = `
+  contactData.forEach((x) => {
+    const html = `
   <li class="content">
-              <span>${inputFirstName.value} ${inputLastName.value}</span>
-              <span>${inputContact.value}</span>
-              <span>${inputEmaill.value}</span>
-              <span class="chng">
+              <span>${x.name}</span>
+              <span>${x.contact}</span>
+              <span>${x.email}</span>
+              <span class="chng delete-btn">
                 <img
                   src="img/delete-svgrepo-com.svg"
                   height="40rem"
                   alt="delete"
                 />
               </span>
-              <span class="chng">
-                <img src="img/edit-svgrepo-com.svg" height="40rem" alt="edit" />
+              <span class="chng edit-btn">
+                <img src="img/edit-svgrepo-com.svg" 
+                height="40rem" 
+                alt="edit" />
               </span>
             </li>
   `;
-  titleContainer.insertAdjacentHTML("beforeend", html);
-  contactData.push({
-    firstName: inputFirstName.value,
-    firstName: inputLastName.value,
-    firstName: inputContact.value,
-    firstName: inputEmaill.value,
+    titleContainer.insertAdjacentHTML("beforeend", html);
   });
-  inputFirstName.value =
-    inputLastName.value =
-    inputContact.value =
-    inputEmaill.value =
-      "";
+
+  const btnDelete = document.querySelectorAll(".delete-btn");
+  const btnEdit = document.querySelectorAll(".edit-btn");
+
+  btnDelete.forEach((el) => {
+    el.addEventListener("click", (e) => {
+      modalDelete.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    });
+  });
+  btnEdit.forEach((el) => {
+    el.addEventListener("click", () => {
+      contactForm.classList.toggle("hidden");
+      overlay.classList.toggle("hidden");
+      console.log("clicked");
+    });
+  });
 };
+// render(contactData[0]);
+const pushData = () => {
+  contactData.push({
+    name: inputFirstName.value + inputLastName.value,
+    contact: inputContact.value,
+    email: inputEmaill.value,
+  });
+};
+btnDeleteYes.addEventListener("click", () => {
+  console.log("hi");
+});
 btnDone.addEventListener("click", () => {
+  const content = document.querySelectorAll(".content");
+  content.forEach((el) => {
+    el.remove();
+  });
+  pushData();
   render();
   contactForm.classList.toggle("hidden");
   overlay.classList.toggle("hidden");
+  inputEmaill.value =
+    inputContact.value =
+    inputFirstName.value =
+    inputLastName.value =
+      "";
 });
-console.log(contactData);
