@@ -27,6 +27,12 @@ const modalDelete = document.querySelector(".modal-delete");
 const btnDeleteYes = document.querySelector(".btn-delete-yes");
 
 let contactData = [];
+const displayOverlay = () => overlay.classList.remove("hidden");
+const hideOverlay = () => overlay.classList.add("hidden");
+const displayForm = () => contactForm.classList.remove("hidden");
+const hideForm = () => contactForm.classList.add("hidden");
+const hideModalLogout = () => modalLogout.classList.add("hidden");
+const hideModalDelete = () => modalDelete.classList.add("hidden");
 
 // implementing login
 inputEmail.addEventListener("focus", function () {
@@ -67,53 +73,48 @@ btnLogin.addEventListener("click", (e) => {
 //  implementing logout
 btnLogout.addEventListener("click", () => {
   modalLogout.classList.remove("hidden");
-  overlay.classList.remove("hidden");
+  displayOverlay();
 });
 
-btnNo.forEach((x) => {
-  x.addEventListener("click", () => {
-    modalLogout.classList.add("hidden");
-    overlay.classList.add("hidden");
-    modalDelete.classList.add("hidden");
+btnNo.forEach((el) => {
+  el.addEventListener("click", () => {
+    hideModalLogout();
+    hideOverlay();
+    hideModalDelete();
   });
 });
-// btnCloseLogoutModal[0].addEventListener("click", () => {
-//   modalLogout.classList.add("hidden");
-//   overlay.classList.add("hidden");
-//   contactForm.classList.add("hidden");
-// });
+
 btnCloseLogoutModal.forEach((element) =>
   element.addEventListener("click", () => {
-    modalLogout.classList.add("hidden");
-    overlay.classList.add("hidden");
-    contactForm.classList.add("hidden");
-    modalDelete.classList.add("hidden");
+    hideModalLogout();
+    hideOverlay();
+    hideForm();
+    hideModalDelete();
   })
 );
 btnCancel.addEventListener("click", () => {
-  overlay.classList.add("hidden");
-  contactForm.classList.add("hidden");
+  hideOverlay();
+  hideForm();
 });
 overlay.addEventListener("click", () => {
-  modalLogout.classList.add("hidden");
-  overlay.classList.add("hidden");
-  contactForm.classList.add("hidden");
-  modalDelete.classList.add("hidden");
+  hideModalLogout();
+  hideOverlay();
+  hideForm();
+  hideModalDelete();
 });
 btnYes.addEventListener("click", () => {
   modalLogin.classList.remove("hidden");
   appBody.classList.add("hidden");
-  // overlay.classList.remove("hidden");
 });
 btnAddContact.addEventListener("click", () => {
-  contactForm.classList.remove("hidden");
-  overlay.classList.remove("hidden");
+  displayForm();
+  displayOverlay();
 });
 const render = () => {
   contactData.forEach((x) => {
     const html = `
   <li class="content">
-              <span>${x.name}</span>
+              <span>${x.firstName} ${x.lastName}</span>
               <span>${x.contact}</span>
               <span>${x.email}</span>
               <span class="chng delete-btn">
@@ -139,21 +140,26 @@ const render = () => {
   btnDelete.forEach((el) => {
     el.addEventListener("click", (e) => {
       modalDelete.classList.remove("hidden");
-      overlay.classList.remove("hidden");
+      displayOverlay();
     });
   });
-  btnEdit.forEach((el) => {
-    el.addEventListener("click", () => {
-      contactForm.classList.toggle("hidden");
-      overlay.classList.toggle("hidden");
-      console.log("clicked");
+  btnEdit.forEach((el, i) => {
+    console.log(contactData);
+    el.addEventListener("click", (e) => {
+      inputContact.value = contactData[i].contact;
+      inputEmaill.value = contactData[i].email;
+      inputFirstName.value = contactData[i].firstName;
+      inputLastName.value = contactData[i].lastName;
+      displayForm();
+      displayOverlay();
     });
   });
 };
 // render(contactData[0]);
 const pushData = () => {
   contactData.push({
-    name: inputFirstName.value + inputLastName.value,
+    firstName: inputFirstName.value,
+    lastName: inputLastName.value,
     contact: inputContact.value,
     email: inputEmaill.value,
   });
@@ -161,9 +167,13 @@ const pushData = () => {
 btnDeleteYes.addEventListener("click", () => {
   console.log("hi");
 });
+
 btnDone.addEventListener("click", () => {
+  console.log("clicked");
   const content = document.querySelectorAll(".content");
+  console.log(content);
   content.forEach((el) => {
+    console.log(el);
     el.remove();
   });
   pushData();
