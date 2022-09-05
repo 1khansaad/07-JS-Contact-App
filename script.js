@@ -25,6 +25,10 @@ const inputEmaill = document.getElementById("email");
 const titleContainer = document.querySelector(".title-container");
 const modalDelete = document.querySelector(".modal-delete");
 const btnDeleteYes = document.querySelector(".btn-delete-yes");
+const msgFormFirst = document.querySelector(".msg-one");
+const msgFormLast = document.querySelector(".msg-two");
+const msgFormContact = document.querySelector(".msg-three");
+const msgFormEmail = document.querySelector(".msg-four");
 
 const displayOverlay = () => overlay.classList.remove("hidden");
 const hideOverlay = () => overlay.classList.add("hidden");
@@ -44,8 +48,8 @@ inputEmail.addEventListener("focus", function () {
 });
 
 //
-modalLogin.classList.add("hidden");
-appBody.classList.remove("hidden");
+// modalLogin.classList.add("hidden");
+// appBody.classList.remove("hidden");
 //
 
 btnLogin.addEventListener("click", (e) => {
@@ -58,6 +62,7 @@ btnLogin.addEventListener("click", (e) => {
   ) {
     modalLogin.classList.add("hidden");
     appBody.classList.remove("hidden");
+    inputEmail.value = inputPassword.value = "";
   }
   if (!inputValue.includes("@gmail.com") || !inputValue) {
     const html = `<p class='error'>Invalid Email address!</p>`;
@@ -93,12 +98,16 @@ btnCloseLogoutModal.forEach((element) =>
     hideOverlay();
     hideForm();
     hideModalDelete();
+    clearInputField();
+    funFocus();
     done = "";
   })
 );
 btnCancel.addEventListener("click", () => {
   hideOverlay();
   hideForm();
+  clearInputField();
+  funFocus();
   done = "";
 });
 overlay.addEventListener("click", () => {
@@ -106,6 +115,8 @@ overlay.addEventListener("click", () => {
   hideOverlay();
   hideForm();
   hideModalDelete();
+  clearInputField();
+  funFocus();
   done = "";
 });
 btnYes.addEventListener("click", () => {
@@ -159,12 +170,11 @@ const render = () => {
       inputLastName.value = contactData[i].lastName;
       displayForm();
       displayOverlay();
-      done = "editForm";
       index = i;
+      done = "editForm";
     });
   });
 };
-// render(contactData[0]);
 const pushData = () => {
   contactData.push({
     firstName: inputFirstName.value,
@@ -184,40 +194,83 @@ btnDeleteYes.addEventListener("click", () => {
   render();
 });
 
-btnDone.addEventListener("click", () => {
+const funRemoveEvent = () => btnDone.removeEventListener("click", funBtnDone);
+const funAddEvent = () => btnDone.addEventListener("click", funBtnDone);
+const funFocus = () => {
+  funAddEvent();
+  const error = document.querySelectorAll(".error");
+  error.forEach((el) => el.remove());
+};
+const clearInputField = () => {
+  inputEmaill.value =
+    inputContact.value =
+    inputFirstName.value =
+    inputLastName.value =
+      "";
+};
+
+inputFirstName.addEventListener("focus", funFocus);
+inputLastName.addEventListener("focus", funFocus);
+inputContact.addEventListener("focus", funFocus);
+inputEmaill.addEventListener("focus", funFocus);
+
+const funBtnDone = () => {
   const content = document.querySelectorAll(".content");
   if (done == "contactForm") {
-    // const content = document.querySelectorAll(".content");
+    if (
+      inputFirstName.value &&
+      inputLastName.value &&
+      inputContact.value &&
+      inputContact.value.length == 10 &&
+      inputEmaill.value &&
+      inputEmaill.value.includes("@gmail.com")
+    ) {
+      content.forEach((el) => {
+        el.remove();
+      });
+      pushData();
+      render();
+      contactForm.classList.add("hidden");
+      overlay.classList.add("hidden");
+      inputEmaill.value =
+        inputContact.value =
+        inputFirstName.value =
+        inputLastName.value =
+          "";
+      done = "";
+    }
+    if (!inputFirstName.value) {
+      const html = `<p class='error'>Invalid first name!</p>`;
+      msgFormFirst.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputLastName.value) {
+      const html = `<p class='error'>Invalid last name!</p>`;
+      msgFormLast.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputContact.value || !inputContact.value.length == 10) {
+      const html = `<p class='error'>Invalid contact!</p>`;
+      msgFormContact.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputEmaill.value || !inputEmaill.value.includes("@gmail.com")) {
+      const html = `<p class='error'>Invalid email!</p>`;
+      msgFormEmail.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+  }
+  if (done == "editForm") {
     content.forEach((el) => {
       el.remove();
     });
+    contactData.splice(index, 1);
     pushData();
     render();
     contactForm.classList.add("hidden");
     overlay.classList.add("hidden");
-    inputEmaill.value =
-      inputContact.value =
-      inputFirstName.value =
-      inputLastName.value =
-        "";
+    clearInputField();
     done = "";
   }
-  // if ((done = "editForm")) {
-  //   btnDone.addEventListener("click", () => {
-  //     contactData.splice(index, 1);
-  //     content.forEach((el) => {
-  //       el.remove();
-  //     });
-  //     pushData();
-  //     render();
-  //     contactForm.classList.add("hidden");
-  //     overlay.classList.add("hidden");
-  //     inputEmaill.value =
-  //       inputContact.value =
-  //       inputFirstName.value =
-  //       inputLastName.value =
-  //         "";
-  //     done = "";
-  //   });
-  // }
-});
+};
+btnDone.addEventListener("click", funBtnDone);
