@@ -26,13 +26,16 @@ const titleContainer = document.querySelector(".title-container");
 const modalDelete = document.querySelector(".modal-delete");
 const btnDeleteYes = document.querySelector(".btn-delete-yes");
 
-let contactData = [];
 const displayOverlay = () => overlay.classList.remove("hidden");
 const hideOverlay = () => overlay.classList.add("hidden");
 const displayForm = () => contactForm.classList.remove("hidden");
 const hideForm = () => contactForm.classList.add("hidden");
 const hideModalLogout = () => modalLogout.classList.add("hidden");
 const hideModalDelete = () => modalDelete.classList.add("hidden");
+
+let contactData = [];
+let done;
+let index;
 
 // implementing login
 inputEmail.addEventListener("focus", function () {
@@ -90,17 +93,20 @@ btnCloseLogoutModal.forEach((element) =>
     hideOverlay();
     hideForm();
     hideModalDelete();
+    done = "";
   })
 );
 btnCancel.addEventListener("click", () => {
   hideOverlay();
   hideForm();
+  done = "";
 });
 overlay.addEventListener("click", () => {
   hideModalLogout();
   hideOverlay();
   hideForm();
   hideModalDelete();
+  done = "";
 });
 btnYes.addEventListener("click", () => {
   modalLogin.classList.remove("hidden");
@@ -109,6 +115,7 @@ btnYes.addEventListener("click", () => {
 btnAddContact.addEventListener("click", () => {
   displayForm();
   displayOverlay();
+  done = "contactForm";
 });
 const render = () => {
   contactData.forEach((x) => {
@@ -137,21 +144,23 @@ const render = () => {
   const btnDelete = document.querySelectorAll(".delete-btn");
   const btnEdit = document.querySelectorAll(".edit-btn");
 
-  btnDelete.forEach((el) => {
+  btnDelete.forEach((el, i) => {
     el.addEventListener("click", (e) => {
       modalDelete.classList.remove("hidden");
       displayOverlay();
+      index = i;
     });
   });
   btnEdit.forEach((el, i) => {
-    console.log(contactData);
-    el.addEventListener("click", (e) => {
+    el.addEventListener("click", () => {
       inputContact.value = contactData[i].contact;
       inputEmaill.value = contactData[i].email;
       inputFirstName.value = contactData[i].firstName;
       inputLastName.value = contactData[i].lastName;
       displayForm();
       displayOverlay();
+      done = "editForm";
+      index = i;
     });
   });
 };
@@ -165,24 +174,50 @@ const pushData = () => {
   });
 };
 btnDeleteYes.addEventListener("click", () => {
-  console.log("hi");
+  hideOverlay();
+  modalDelete.classList.add("hidden");
+  contactData.splice(index, 1);
+  const content = document.querySelectorAll(".content");
+  content.forEach((el) => {
+    el.remove();
+  });
+  render();
 });
 
 btnDone.addEventListener("click", () => {
-  console.log("clicked");
   const content = document.querySelectorAll(".content");
-  console.log(content);
-  content.forEach((el) => {
-    console.log(el);
-    el.remove();
-  });
-  pushData();
-  render();
-  contactForm.classList.toggle("hidden");
-  overlay.classList.toggle("hidden");
-  inputEmaill.value =
-    inputContact.value =
-    inputFirstName.value =
-    inputLastName.value =
-      "";
+  if (done == "contactForm") {
+    // const content = document.querySelectorAll(".content");
+    content.forEach((el) => {
+      el.remove();
+    });
+    pushData();
+    render();
+    contactForm.classList.add("hidden");
+    overlay.classList.add("hidden");
+    inputEmaill.value =
+      inputContact.value =
+      inputFirstName.value =
+      inputLastName.value =
+        "";
+    done = "";
+  }
+  // if ((done = "editForm")) {
+  //   btnDone.addEventListener("click", () => {
+  //     contactData.splice(index, 1);
+  //     content.forEach((el) => {
+  //       el.remove();
+  //     });
+  //     pushData();
+  //     render();
+  //     contactForm.classList.add("hidden");
+  //     overlay.classList.add("hidden");
+  //     inputEmaill.value =
+  //       inputContact.value =
+  //       inputFirstName.value =
+  //       inputLastName.value =
+  //         "";
+  //     done = "";
+  //   });
+  // }
 });
