@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
+    <title>My Contact</title>
+  </head>
+  <body>
+    <!-- login page -->
+    <div class="modal">
+      <h2 class="modal__header">LOGIN TO EXPLORE MORE</h2>
+      <form class="modal__form">
+        <label>Email</label>
+        <div class="msg msg-email">
+          <input class="email" type="email" />
+        </div>
+        <label>Password</label>
+        <div class="msg msg-password">
+          <input class="password" type="password" />
+        </div>
+        <button class="btn btn--login">LOGIN</button>
+      </form>
+      <div class="div">Need an account? <span class="sign">SIGN UP</span></div>
+    </div>
+
+    <!-- app body -->
+    <div class="container-app hidden">
+      <nav class="navigation">
+        <ul class="logo-sec">
+          <li>
+            <img src="img/contacts-svgrepo-com.svg" alt="contact-app-logo" />
+          </li>
+          <li>MY CONTACTS</li>
+        </ul>
+        <ul>
+          <li class="log-out"><button class="btn log-out">LOG OUT</button></li>
+        </ul>
+      </nav>
+
+      <!-- add contact and Edit window -->
+      <div class="contact-form hidden">
+        <div class="modal">
+          <button class="btn--close-modal">&times;</button>
+          <h2 class="modal__header">Add New Contact</h2>
+          <form class="modal__form">
+            <label>First Name</label>
+            <div class="msg msg-one">
+              <input id="first-name" type="text" />
+            </div>
+            <label>Last Name</label>
+            <div class="msg msg-two">
+              <input id="last-name" type="text" />
+            </div>
+            <label>Contact</label>
+            <div class="msg msg-three">
+              <input id="contact" type="number" />
+            </div>
+            <label>Email Address</label>
+            <div class="msg msg-four">
+              <input id="email" type="email" />
+            </div>
+          </form>
+          <div class="btn-container">
+            <button class="btn btn-cancel">Cancel</button>
+            <button class="btn btn-done">Done</button>
+          </div>
+        </div>
+      </div>
+      <!-- contact card -->
+      <div class="card-container">
+        <div class="title-container">
+          <ul>
+            <li class="title">
+              <span>Name</span>
+              <span>Contact</span>
+              <span>Email</span>
+              <span>Delete</span>
+              <span>Edit</span>
+            </li>
+            <!-- <li class="content">
+              <span>Saad khan</span>
+              <span>7900049605</span>
+              <span>saadkhan@gmail.com</span>
+              <span class="chng delete-btn">
+                <img
+                  src="img/delete-svgrepo-com.svg"
+                  height="40rem"
+                  alt="delete"
+                />
+              </span>
+              <span class="chng edit-btn">
+                <img src="img/edit-svgrepo-com.svg" height="40rem" alt="edit" />
+              </span>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+      <div class="modal modal-logout hidden">
+        <button class="btn--close-modal">&times;</button>
+        <h2 class="modal__header">Are you sure?</h2>
+        <div class="btn-container">
+          <button class="btn btn-no">NO</button>
+          <button class="btn btn-yes">YES</button>
+        </div>
+      </div>
+      <div class="modal modal-delete hidden">
+        <button class="btn--close-modal">&times;</button>
+        <h2 class="modal__header">Are you sure?</h2>
+        <div class="btn-container">
+          <button class="btn btn-no">NO</button>
+          <button class="btn btn-delete-yes">YES</button>
+        </div>
+      </div>
+      <div class="overlay hidden"></div>
+      <!-- add contact button -->
+      <div class="add-contact">
+        <span>+</span>
+      </div>
+    </div>
+  </body>
+</html>
