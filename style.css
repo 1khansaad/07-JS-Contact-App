@@ -256,4 +256,5 @@ svg:hover {
   color: blue;
   text-decoration: underline;
   line-height: 2rem;
+  cursor: pointer;
 }
