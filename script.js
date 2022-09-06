@@ -42,19 +42,24 @@ let done;
 let index;
 
 // implementing login
-inputEmail.addEventListener("focus", function () {
-  msg.classList.remove("error");
-  msg.innerHTML = "";
-});
 
-//
-// modalLogin.classList.add("hidden");
-// appBody.classList.remove("hidden");
-//
-
-btnLogin.addEventListener("click", (e) => {
+const funLoginCheck = (e) => {
   e.preventDefault();
   const inputValue = inputEmail.value.toLowerCase();
+  if (!inputValue || !inputValue.includes("@gmail.com")) {
+    const html = `<p class='error'>Invalid Email address!</p>`;
+    msgEmail.insertAdjacentHTML("beforeend", html);
+    btnLogin.removeEventListener("click", funLoginCheck);
+  }
+  if (
+    !inputPassword.value ||
+    inputPassword.value.length <= 6 ||
+    inputPassword.value.length >= 10
+  ) {
+    const html = `<p class='error'>Invalid Password!</p>`;
+    msgPassword.insertAdjacentHTML("beforeend", html);
+    btnLogin.removeEventListener("click", funLoginCheck);
+  }
   if (
     inputValue.includes("@gmail.com") &&
     inputPassword.value.length >= 6 &&
@@ -64,19 +69,8 @@ btnLogin.addEventListener("click", (e) => {
     appBody.classList.remove("hidden");
     inputEmail.value = inputPassword.value = "";
   }
-  if (!inputValue.includes("@gmail.com") || !inputValue) {
-    const html = `<p class='error'>Invalid Email address!</p>`;
-    msgEmail.insertAdjacentHTML("beforeend", html);
-  }
-  if (
-    inputPassword.value.length <= 6 ||
-    inputPassword.value.length >= 10 ||
-    !inputPassword
-  ) {
-    const html = `<p class='error'>Invalid Password!</p>`;
-    msgPassword.insertAdjacentHTML("beforeend", html);
-  }
-});
+};
+btnLogin.addEventListener("click", funLoginCheck);
 
 //  implementing logout
 btnLogout.addEventListener("click", () => {
@@ -122,6 +116,8 @@ overlay.addEventListener("click", () => {
 btnYes.addEventListener("click", () => {
   modalLogin.classList.remove("hidden");
   appBody.classList.add("hidden");
+  hideModalLogout();
+  hideOverlay();
 });
 btnAddContact.addEventListener("click", () => {
   displayForm();
@@ -164,6 +160,7 @@ const render = () => {
   });
   btnEdit.forEach((el, i) => {
     el.addEventListener("click", () => {
+      funFocus();
       inputContact.value = contactData[i].contact;
       inputEmaill.value = contactData[i].email;
       inputFirstName.value = contactData[i].firstName;
@@ -209,36 +206,17 @@ const clearInputField = () => {
       "";
 };
 
+inputEmail.addEventListener("focus", funFocus);
 inputFirstName.addEventListener("focus", funFocus);
 inputLastName.addEventListener("focus", funFocus);
 inputContact.addEventListener("focus", funFocus);
 inputEmaill.addEventListener("focus", funFocus);
+inputPassword.addEventListener("focus", funFocus);
 
 const funBtnDone = () => {
+  funFocus();
   const content = document.querySelectorAll(".content");
   if (done == "contactForm") {
-    if (
-      inputFirstName.value &&
-      inputLastName.value &&
-      inputContact.value &&
-      inputContact.value.length == 10 &&
-      inputEmaill.value &&
-      inputEmaill.value.includes("@gmail.com")
-    ) {
-      content.forEach((el) => {
-        el.remove();
-      });
-      pushData();
-      render();
-      contactForm.classList.add("hidden");
-      overlay.classList.add("hidden");
-      inputEmaill.value =
-        inputContact.value =
-        inputFirstName.value =
-        inputLastName.value =
-          "";
-      done = "";
-    }
     if (!inputFirstName.value) {
       const html = `<p class='error'>Invalid first name!</p>`;
       msgFormFirst.insertAdjacentHTML("beforeend", html);
@@ -258,6 +236,24 @@ const funBtnDone = () => {
       const html = `<p class='error'>Invalid email!</p>`;
       msgFormEmail.insertAdjacentHTML("beforeend", html);
       funRemoveEvent();
+    }
+    if (
+      inputFirstName.value &&
+      inputLastName.value &&
+      inputContact.value &&
+      inputContact.value.length == 10 &&
+      inputEmaill.value &&
+      inputEmaill.value.includes("@gmail.com")
+    ) {
+      content.forEach((el) => {
+        el.remove();
+      });
+      pushData();
+      render();
+      contactForm.classList.add("hidden");
+      overlay.classList.add("hidden");
+      clearInputField();
+      done = "";
     }
   }
   if (done == "editForm") {
