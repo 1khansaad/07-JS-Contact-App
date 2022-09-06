@@ -270,3 +270,7 @@ const funBtnDone = () => {
   }
 };
 btnDone.addEventListener("click", funBtnDone);
+
+const arr = [1, 2, 3, 4, 5];
+arr.insert(0, "item");
+console.log(arr);

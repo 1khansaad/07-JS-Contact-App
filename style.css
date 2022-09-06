@@ -246,3 +246,14 @@ svg:hover {
   font-size: 10px;
   color: red;
 }
+.div {
+  position: inherit;
+  top: 101%;
+  left: 30%;
+  font-size: 1.2rem;
+}
+.div .sign {
+  color: blue;
+  text-decoration: underline;
+  line-height: 2rem;
+}
