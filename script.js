@@ -41,6 +41,23 @@ let contactData = [];
 let done;
 let index;
 
+//
+const Storage = () => {
+  localStorage.setItem("contacts", JSON.stringify(contactData));
+};
+const getStorage = () => {
+  const data = localStorage.getItem("contacts");
+  console.log(data);
+};
+//
+
+const funRemoveEvent = () => btnDone.removeEventListener("click", funBtnDone);
+const funAddEvent = () => btnDone.addEventListener("click", funBtnDone);
+const funFocus = () => {
+  funAddEvent();
+  const error = document.querySelectorAll(".error");
+  error.forEach((el) => el.remove());
+};
 // implementing login
 
 const funLoginCheck = (e) => {
@@ -49,7 +66,7 @@ const funLoginCheck = (e) => {
   if (!inputValue || !inputValue.includes("@gmail.com")) {
     const html = `<p class='error'>Invalid Email address!</p>`;
     msgEmail.insertAdjacentHTML("beforeend", html);
-    btnLogin.removeEventListener("click", funLoginCheck);
+    // btnLogin.removeEventListener("click", funLoginCheck);
   }
   if (
     !inputPassword.value ||
@@ -58,7 +75,7 @@ const funLoginCheck = (e) => {
   ) {
     const html = `<p class='error'>Invalid Password!</p>`;
     msgPassword.insertAdjacentHTML("beforeend", html);
-    btnLogin.removeEventListener("click", funLoginCheck);
+    // btnLogin.removeEventListener("click", funLoginCheck);
   }
   if (
     inputValue.includes("@gmail.com") &&
@@ -124,6 +141,64 @@ btnAddContact.addEventListener("click", () => {
   displayOverlay();
   done = "contactForm";
 });
+const funBtnDone = () => {
+  funFocus();
+  const content = document.querySelectorAll(".content");
+  if (done == "contactForm") {
+    if (!inputFirstName.value) {
+      const html = `<p class='error'>Invalid first name!</p>`;
+      msgFormFirst.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputLastName.value) {
+      const html = `<p class='error'>Invalid last name!</p>`;
+      msgFormLast.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputContact.value || !inputContact.value.length == 10) {
+      const html = `<p class='error'>Invalid contact!</p>`;
+      msgFormContact.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputEmaill.value || !inputEmaill.value.includes("@gmail.com")) {
+      const html = `<p class='error'>Invalid email!</p>`;
+      msgFormEmail.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (
+      inputFirstName.value &&
+      inputLastName.value &&
+      inputContact.value &&
+      inputContact.value.length == 10 &&
+      inputEmaill.value &&
+      inputEmaill.value.includes("@gmail.com")
+    ) {
+      content.forEach((el) => {
+        el.remove();
+      });
+      pushData();
+      Storage();
+      render();
+      contactForm.classList.add("hidden");
+      overlay.classList.add("hidden");
+      clearInputField();
+      done = "";
+    }
+  }
+  if (done == "editForm") {
+    content.forEach((el) => {
+      el.remove();
+    });
+    contactData.splice(index, 1);
+    pushData();
+    Storage();
+    render();
+    contactForm.classList.add("hidden");
+    overlay.classList.add("hidden");
+    clearInputField();
+    done = "";
+  }
+};
 const render = () => {
   contactData.forEach((x) => {
     const html = `
@@ -173,7 +248,7 @@ const render = () => {
   });
 };
 const pushData = () => {
-  contactData.push({
+  contactData.unshift({
     firstName: inputFirstName.value,
     lastName: inputLastName.value,
     contact: inputContact.value,
@@ -190,14 +265,6 @@ btnDeleteYes.addEventListener("click", () => {
   });
   render();
 });
-
-const funRemoveEvent = () => btnDone.removeEventListener("click", funBtnDone);
-const funAddEvent = () => btnDone.addEventListener("click", funBtnDone);
-const funFocus = () => {
-  funAddEvent();
-  const error = document.querySelectorAll(".error");
-  error.forEach((el) => el.remove());
-};
 const clearInputField = () => {
   inputEmaill.value =
     inputContact.value =
@@ -206,71 +273,11 @@ const clearInputField = () => {
       "";
 };
 
-inputEmail.addEventListener("focus", funFocus);
 inputFirstName.addEventListener("focus", funFocus);
 inputLastName.addEventListener("focus", funFocus);
 inputContact.addEventListener("focus", funFocus);
 inputEmaill.addEventListener("focus", funFocus);
+inputEmail.addEventListener("focus", funFocus);
 inputPassword.addEventListener("focus", funFocus);
 
-const funBtnDone = () => {
-  funFocus();
-  const content = document.querySelectorAll(".content");
-  if (done == "contactForm") {
-    if (!inputFirstName.value) {
-      const html = `<p class='error'>Invalid first name!</p>`;
-      msgFormFirst.insertAdjacentHTML("beforeend", html);
-      funRemoveEvent();
-    }
-    if (!inputLastName.value) {
-      const html = `<p class='error'>Invalid last name!</p>`;
-      msgFormLast.insertAdjacentHTML("beforeend", html);
-      funRemoveEvent();
-    }
-    if (!inputContact.value || !inputContact.value.length == 10) {
-      const html = `<p class='error'>Invalid contact!</p>`;
-      msgFormContact.insertAdjacentHTML("beforeend", html);
-      funRemoveEvent();
-    }
-    if (!inputEmaill.value || !inputEmaill.value.includes("@gmail.com")) {
-      const html = `<p class='error'>Invalid email!</p>`;
-      msgFormEmail.insertAdjacentHTML("beforeend", html);
-      funRemoveEvent();
-    }
-    if (
-      inputFirstName.value &&
-      inputLastName.value &&
-      inputContact.value &&
-      inputContact.value.length == 10 &&
-      inputEmaill.value &&
-      inputEmaill.value.includes("@gmail.com")
-    ) {
-      content.forEach((el) => {
-        el.remove();
-      });
-      pushData();
-      render();
-      contactForm.classList.add("hidden");
-      overlay.classList.add("hidden");
-      clearInputField();
-      done = "";
-    }
-  }
-  if (done == "editForm") {
-    content.forEach((el) => {
-      el.remove();
-    });
-    contactData.splice(index, 1);
-    pushData();
-    render();
-    contactForm.classList.add("hidden");
-    overlay.classList.add("hidden");
-    clearInputField();
-    done = "";
-  }
-};
 btnDone.addEventListener("click", funBtnDone);
-
-const arr = [1, 2, 3, 4, 5];
-arr.insert(0, "item");
-console.log(arr);
