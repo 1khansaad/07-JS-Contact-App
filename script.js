@@ -41,32 +41,56 @@ let contactData = [];
 let done;
 let index;
 
+//
+const setStorage = () => {
+  localStorage.setItem("contacts", JSON.stringify(contactData));
+};
+
+contactData = JSON.parse(localStorage.getItem("contacts"));
+//
+
+const funRemoveEvent = () => btnDone.removeEventListener("click", funBtnDone);
+const funAddEvent = () => btnDone.addEventListener("click", funBtnDone);
+const funFocus = () => {
+  const error = document.querySelectorAll(".error");
+  const error2 = document.querySelectorAll(".error2");
+  error2.forEach((el) => el.remove());
+  error.forEach((el) => el.remove());
+};
+const funFocusEmail = () => {
+  btnLogin.addEventListener("click", funLoginCheck);
+  const error = document.querySelectorAll(".error");
+  error.forEach((el) => el.remove());
+};
 // implementing login
 
 const funLoginCheck = (e) => {
   e.preventDefault();
   const inputValue = inputEmail.value.toLowerCase();
   if (!inputValue || !inputValue.includes("@gmail.com")) {
+    const error = document.querySelector(".error");
+    if (error) error.remove();
     const html = `<p class='error'>Invalid Email address!</p>`;
     msgEmail.insertAdjacentHTML("beforeend", html);
-    btnLogin.removeEventListener("click", funLoginCheck);
   }
   if (
     !inputPassword.value ||
     inputPassword.value.length <= 6 ||
     inputPassword.value.length >= 10
   ) {
-    const html = `<p class='error'>Invalid Password!</p>`;
+    const error = document.querySelector(".error2");
+    if (error) error.remove();
+    const html = `<p class='error2'>Password length should be more than 6 or less than 10</p>`;
     msgPassword.insertAdjacentHTML("beforeend", html);
-    btnLogin.removeEventListener("click", funLoginCheck);
   }
   if (
     inputValue.includes("@gmail.com") &&
-    inputPassword.value.length >= 6 &&
-    inputPassword.value.length <= 10
+    inputPassword.value.length > 6 &&
+    inputPassword.value.length < 10
   ) {
     modalLogin.classList.add("hidden");
     appBody.classList.remove("hidden");
+    render();
     inputEmail.value = inputPassword.value = "";
   }
 };
@@ -124,6 +148,65 @@ btnAddContact.addEventListener("click", () => {
   displayOverlay();
   done = "contactForm";
 });
+const funBtnDone = () => {
+  funFocus();
+  const content = document.querySelectorAll(".content");
+  if (done == "contactForm") {
+    if (!inputFirstName.value) {
+      const html = `<p class='error'>Invalid first name!</p>`;
+      msgFormFirst.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputLastName.value) {
+      const html = `<p class='error'>Invalid last name!</p>`;
+      msgFormLast.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputContact.value || inputContact.value.length !== 10) {
+      const html = `<p class='error'>Invalid contact!</p>`;
+      msgFormContact.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (!inputEmaill.value || !inputEmaill.value.includes("@gmail.com")) {
+      const html = `<p class='error'>Invalid email!</p>`;
+      msgFormEmail.insertAdjacentHTML("beforeend", html);
+      funRemoveEvent();
+    }
+    if (
+      inputFirstName.value &&
+      inputLastName.value &&
+      inputContact.value &&
+      inputContact.value.length == 10 &&
+      inputEmaill.value &&
+      inputEmaill.value.includes("@gmail.com")
+    ) {
+      content.forEach((el) => {
+        el.remove();
+      });
+      pushData();
+      render();
+
+      contactForm.classList.add("hidden");
+      overlay.classList.add("hidden");
+      clearInputField();
+      done = "";
+    }
+  }
+  if (done == "editForm") {
+    content.forEach((el) => {
+      el.remove();
+    });
+    contactData.splice(index, 1);
+    pushData();
+    render();
+
+    contactForm.classList.add("hidden");
+    overlay.classList.add("hidden");
+    clearInputField();
+    done = "";
+  }
+};
+
 const render = () => {
   contactData.forEach((x) => {
     const html = `
@@ -173,31 +256,26 @@ const render = () => {
   });
 };
 const pushData = () => {
-  contactData.push({
+  contactData.unshift({
     firstName: inputFirstName.value,
     lastName: inputLastName.value,
     contact: inputContact.value,
     email: inputEmaill.value,
   });
+  setStorage();
 };
-btnDeleteYes.addEventListener("click", () => {
+btnDeleteYes.addEventListener("click", (e) => {
   hideOverlay();
   modalDelete.classList.add("hidden");
+  console.log(contactData);
   contactData.splice(index, 1);
+  setStorage();
   const content = document.querySelectorAll(".content");
   content.forEach((el) => {
     el.remove();
   });
   render();
 });
-
-const funRemoveEvent = () => btnDone.removeEventListener("click", funBtnDone);
-const funAddEvent = () => btnDone.addEventListener("click", funBtnDone);
-const funFocus = () => {
-  funAddEvent();
-  const error = document.querySelectorAll(".error");
-  error.forEach((el) => el.remove());
-};
 const clearInputField = () => {
   inputEmaill.value =
     inputContact.value =
@@ -206,71 +284,12 @@ const clearInputField = () => {
       "";
 };
 
-inputEmail.addEventListener("focus", funFocus);
 inputFirstName.addEventListener("focus", funFocus);
 inputLastName.addEventListener("focus", funFocus);
 inputContact.addEventListener("focus", funFocus);
 inputEmaill.addEventListener("focus", funFocus);
+inputEmail.addEventListener("focus", funFocusEmail);
 inputPassword.addEventListener("focus", funFocus);
 
-const funBtnDone = () => {
-  funFocus();
-  const content = document.querySelectorAll(".content");
-  if (done == "contactForm") {
-    if (!inputFirstName.value) {
-      const html = `<p class='error'>Invalid first name!</p>`;
-      msgFormFirst.insertAdjacentHTML("beforeend", html);
-      funRemoveEvent();
-    }
-    if (!inputLastName.value) {
-      const html = `<p class='error'>Invalid last name!</p>`;
-      msgFormLast.insertAdjacentHTML("beforeend", html);
-      funRemoveEvent();
-    }
-    if (!inputContact.value || !inputContact.value.length == 10) {
-      const html = `<p class='error'>Invalid contact!</p>`;
-      msgFormContact.insertAdjacentHTML("beforeend", html);
-      funRemoveEvent();
-    }
-    if (!inputEmaill.value || !inputEmaill.value.includes("@gmail.com")) {
-      const html = `<p class='error'>Invalid email!</p>`;
-      msgFormEmail.insertAdjacentHTML("beforeend", html);
-      funRemoveEvent();
-    }
-    if (
-      inputFirstName.value &&
-      inputLastName.value &&
-      inputContact.value &&
-      inputContact.value.length == 10 &&
-      inputEmaill.value &&
-      inputEmaill.value.includes("@gmail.com")
-    ) {
-      content.forEach((el) => {
-        el.remove();
-      });
-      pushData();
-      render();
-      contactForm.classList.add("hidden");
-      overlay.classList.add("hidden");
-      clearInputField();
-      done = "";
-    }
-  }
-  if (done == "editForm") {
-    content.forEach((el) => {
-      el.remove();
-    });
-    contactData.splice(index, 1);
-    pushData();
-    render();
-    contactForm.classList.add("hidden");
-    overlay.classList.add("hidden");
-    clearInputField();
-    done = "";
-  }
-};
 btnDone.addEventListener("click", funBtnDone);
-
-const arr = [1, 2, 3, 4, 5];
-arr.insert(0, "item");
-console.log(arr);
+// console.log(0 <= 6 || 5 <= 6 || )
