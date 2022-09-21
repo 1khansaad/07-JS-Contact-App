@@ -142,6 +142,8 @@ btnYes.addEventListener("click", () => {
   appBody.classList.add("hidden");
   hideModalLogout();
   hideOverlay();
+  const content = document.querySelectorAll(".content");
+  content.forEach((el) => el.remove());
 });
 btnAddContact.addEventListener("click", () => {
   displayForm();
